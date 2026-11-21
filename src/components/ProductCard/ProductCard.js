@@ -7,7 +7,11 @@ import './ProductCard.css';
 function ProductCard({ title, price, description, category, image, rating }) {
   const header = (
     <div className="product-card__image-wrapper flex align-items-center justify-content-center p-4">
-      <img className="product-card__image" src={image} alt={title} />
+      {image ? (
+        <img className="product-card__image" src={image} alt={title} />
+      ) : (
+        <i className="pi pi-image text-6xl text-300" />
+      )}
     </div>
   );
 
