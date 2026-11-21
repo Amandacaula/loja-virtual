@@ -108,7 +108,7 @@ function ProductForm({ onSubmit, onCancel }) {
             value={values.price}
             onValueChange={(e) => handleChange('price', e.value)}
             mode="currency"
-            currency="USD"
+            currency="BRL"
             locale="pt-BR"
             min={0}
             className={classNames('w-full', { 'p-invalid': errors.price })}

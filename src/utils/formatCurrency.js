@@ -1,6 +1,6 @@
 const formatter = new Intl.NumberFormat('pt-BR', {
   style: 'currency',
-  currency: 'USD',
+  currency: 'BRL',
 });
 
 export const formatCurrency = (value) => formatter.format(Number(value) || 0);
