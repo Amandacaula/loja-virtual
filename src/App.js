@@ -1,11 +1,17 @@
+import Header from './components/Header/Header';
 import ProductList from './components/ProductList/ProductList';
 
 function App() {
   return (
-    <main className="p-4">
-      <h1 className="text-center">Loja Virtual</h1>
-      <ProductList />
-    </main>
+    <div className="min-h-screen flex flex-column">
+      <Header />
+      <main className="flex-1 w-full max-w-screen-xl mx-auto px-3 md:px-5 py-4">
+        <ProductList />
+      </main>
+      <footer className="surface-0 border-top-1 surface-border text-center text-500 text-sm py-3">
+        Loja Virtual &copy; {new Date().getFullYear()}
+      </footer>
+    </div>
   );
 }
 

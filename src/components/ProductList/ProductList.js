@@ -1,9 +1,12 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Message } from 'primereact/message';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { Toast } from 'primereact/toast';
+import { InputText } from 'primereact/inputtext';
+import { IconField } from 'primereact/iconfield';
+import { InputIcon } from 'primereact/inputicon';
 import ProductCard from '../ProductCard/ProductCard';
 import ProductForm from '../ProductForm/ProductForm';
 import { getProducts } from '../../services/api';
@@ -13,6 +16,7 @@ function ProductList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [formVisible, setFormVisible] = useState(false);
+  const [search, setSearch] = useState('');
   const toast = useRef(null);
 
   useEffect(() => {
@@ -21,6 +25,18 @@ function ProductList() {
       .catch(() => setError('Não foi possível carregar os produtos. Tente novamente mais tarde.'))
       .finally(() => setLoading(false));
   }, []);
+
+  const filteredProducts = useMemo(() => {
+    const term = search.trim().toLowerCase();
+
+    if (!term) {
+      return products;
+    }
+
+    return products.filter(({ title, category }) =>
+      `${title} ${category}`.toLowerCase().includes(term)
+    );
+  }, [products, search]);
 
   const handleAddProduct = (product) => {
     setProducts((current) => [product, ...current]);
@@ -46,10 +62,19 @@ function ProductList() {
       return <Message severity="error" text={error} className="w-full" />;
     }
 
+    if (filteredProducts.length === 0) {
+      return (
+        <div className="flex flex-column align-items-center gap-2 p-6 text-500">
+          <i className="pi pi-search text-4xl" />
+          <span>Nenhum produto encontrado.</span>
+        </div>
+      );
+    }
+
     return (
       <div className="grid">
-        {products.map((product) => (
-          <div key={product.id} className="col-12 md:col-6 lg:col-4">
+        {filteredProducts.map((product) => (
+          <div key={product.id} className="col-12 sm:col-6 lg:col-4 xl:col-3">
             <ProductCard {...product} />
           </div>
         ))}
@@ -61,8 +86,24 @@ function ProductList() {
     <section>
       <Toast ref={toast} />
 
-      <div className="flex justify-content-end mb-3">
-        <Button label="Adicionar produto" icon="pi pi-plus" onClick={() => setFormVisible(true)} />
+      <div className="surface-card border-round shadow-1 p-3 mb-4 flex flex-column md:flex-row align-items-stretch md:align-items-center justify-content-between gap-3">
+        <div>
+          <h2 className="m-0 text-xl">Produtos</h2>
+          <small className="text-500">{filteredProducts.length} produto(s) exibido(s)</small>
+        </div>
+
+        <div className="flex flex-column sm:flex-row gap-2">
+          <IconField iconPosition="left">
+            <InputIcon className="pi pi-search" />
+            <InputText
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Buscar produto"
+              className="w-full"
+            />
+          </IconField>
+          <Button label="Adicionar produto" icon="pi pi-plus" onClick={() => setFormVisible(true)} />
+        </div>
       </div>
 
       {renderContent()}

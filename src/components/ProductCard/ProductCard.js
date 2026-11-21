@@ -16,7 +16,7 @@ function ProductCard({ title, price, description, category, image, rating }) {
   );
 
   const footer = (
-    <div className="flex align-items-center justify-content-between">
+    <div className="flex flex-wrap align-items-center justify-content-between gap-2">
       <span className="text-2xl font-bold text-primary">{formatCurrency(price)}</span>
       {rating && (
         <div className="flex align-items-center gap-2">
